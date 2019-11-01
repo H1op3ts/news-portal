@@ -1,0 +1,17 @@
+html
+  head
+    title Новостной портал
+    script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
+   
+
+  body
+    block content
+      .header
+        h1 Новостной портал
+      .newsContainer(id = '12')
+      form(action="" name='comment' method="POST" )
+        p Ваше имя:
+          input(type="text" name="name" placeholder="Представьтесь" )
+        p Ваш комментарий:
+          input(type="text-area" name="content" placeholder="Оставьте комментарий")
+        input(class="submit" type='submit' value='Отправить')

@@ -1,0 +1,103 @@
+.header {
+
+    background-color: #ffdead;
+    display: flex;
+    justify-content: center;
+
+}
+
+.header h1 {   
+    align-content: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.submit {
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.newsContainer {
+    margin-left: 20px;
+}
+
+.article {
+    margin:0 20px 20px 20px ;
+    padding: 10px;
+    position: relative;
+    
+}
+
+/* .article:hover {
+    cursor:pointer;
+} */
+
+.article__title {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-bottom: 0;
+    border-top: 1px solid rgb(211, 211, 211);
+    padding-top: 10px;;
+}
+
+.article__content {
+    margin-top: 10px;
+    padding: 10px;
+    position: relative;
+
+}
+
+.article__category {
+    margin: 10px;
+    height: 40px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(233, 48, 23);
+    font-size: 0.8em;
+}
+
+.article__category:hover {
+    text-decoration: none;
+}
+
+.article__createdAt {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(151, 151, 151);
+    font-size: 0.8em;
+    margin: 10px;
+}
+
+.article__expand-button {
+    position: absolute;
+    font-size: 0.8em;;
+    right: 30px;
+    bottom: 20px;
+    text-decoration: underline;
+    color: rgb(199, 199, 199);
+    z-index: 1;
+}
+
+.article__expand-button--hovered {
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.article__expand-comments-button {
+    display: none;
+}
+
+.article__expand-comments-button--visible {
+    display: block;
+    position: absolute;
+    font-size: 0.8em;;
+    right: 100px;
+    bottom: 20px;
+    text-decoration: underline;
+    color: rgb(199, 199, 199);
+    z-index: 1;
+
+}
+
+.article__expand-comments-button--visible:hover {
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}

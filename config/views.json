@@ -1,0 +1,8 @@
+{
+  "views": {
+    "map": {
+      "html": "jade",
+      "md": "hogan"
+    }
+  }
+}

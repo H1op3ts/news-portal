@@ -1,0 +1,48 @@
+{
+  "name": "news-portal",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "strapi": "strapi",
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "body-parser": "^1.19.0",
+    "css-loader": "^3.2.0",
+    "express": "^4.17.1",
+    "html-webpack-plugin": "^3.2.0",
+    "pug": "^2.0.4",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "imports-loader": "^0.8.0",
+    "jquery": "^3.4.1",
+    "mongoose-beautiful-unique-validation": "^7.1.1",
+    "pug-html-loader": "^1.1.5",
+    "strapi": "3.0.0-beta.17.4",
+    "strapi-admin": "3.0.0-beta.17.4",
+    "strapi-hook-mongoose": "3.0.0-beta.17.4",
+    "strapi-plugin-content-manager": "3.0.0-beta.17.4",
+    "strapi-plugin-content-type-builder": "3.0.0-beta.17.4",
+    "strapi-plugin-email": "3.0.0-beta.17.4",
+    "strapi-plugin-upload": "3.0.0-beta.17.4",
+    "strapi-plugin-users-permissions": "3.0.0-beta.17.4",
+    "strapi-utils": "3.0.0-beta.17.4"
+  },
+  "author": {
+    "name": "Hlopets"
+  },
+  "strapi": {
+    "uuid": "30833c02-1952-486b-96a3-279b7b2679e4"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
