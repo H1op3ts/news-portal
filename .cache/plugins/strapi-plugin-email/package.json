@@ -1,0 +1,74 @@
+{
+  "_from": "strapi-plugin-email@3.0.0-beta.17.4",
+  "_id": "strapi-plugin-email@3.0.0-beta.17.4",
+  "_inBundle": false,
+  "_integrity": "sha512-MTSAoNTkP/2BrOqmSqG81t2arzmbguFqjBdSly40UsC248PzJXo/2J6U9QEIyv4agbdjSRsrxt2gpW3Vs9IzcA==",
+  "_location": "/strapi-plugin-email",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "strapi-plugin-email@3.0.0-beta.17.4",
+    "name": "strapi-plugin-email",
+    "escapedName": "strapi-plugin-email",
+    "rawSpec": "3.0.0-beta.17.4",
+    "saveSpec": null,
+    "fetchSpec": "3.0.0-beta.17.4"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/strapi-plugin-email/-/strapi-plugin-email-3.0.0-beta.17.4.tgz",
+  "_shasum": "b367a54b0bdda380467152f88fd68242490725db",
+  "_spec": "strapi-plugin-email@3.0.0-beta.17.4",
+  "_where": "C:\\Users\\валера\\Учеба\\strapi\\my-project",
+  "author": {
+    "name": "Strapi team",
+    "email": "hi@strapi.io",
+    "url": "http://strapi.io"
+  },
+  "bugs": {
+    "url": "https://github.com/strapi/strapi/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "strapi-provider-email-sendmail": "3.0.0-beta.17.4",
+    "strapi-utils": "3.0.0-beta.17.4"
+  },
+  "deprecated": false,
+  "description": "This is the description of the plugin.",
+  "devDependencies": {
+    "react-copy-to-clipboard": "5.0.1",
+    "rimraf": "^2.6.3",
+    "strapi-helper-plugin": "3.0.0-beta.17.4"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "gitHead": "7a61db72851d3ddf3fef172b47100737eb075ceb",
+  "homepage": "https://github.com/strapi/strapi#readme",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Strapi team",
+      "email": "hi@strapi.io",
+      "url": "http://strapi.io"
+    }
+  ],
+  "name": "strapi-plugin-email",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/strapi/strapi.git"
+  },
+  "scripts": {
+    "test": "echo \"no tests yet\""
+  },
+  "strapi": {
+    "name": "Email",
+    "icon": "paper-plane",
+    "description": "email.plugin.description",
+    "required": true
+  },
+  "version": "3.0.0-beta.17.4"
+}

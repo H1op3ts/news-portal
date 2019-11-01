@@ -92,7 +92,7 @@ lcov.info
 pids
 logs
 results
-
+node_modules
 .node_history
 
 
@@ -108,5 +108,5 @@ coverage
 ############################
 
 exports
-.cache
-build
+#.cache
+#build
