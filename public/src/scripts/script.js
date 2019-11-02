@@ -2,6 +2,7 @@ const xhr = new XMLHttpRequest();
 const $comment = document.querySelector('[name = comment]');
 let $body = $('body');
 let $newsContainer = $('.newsContainer');
+let commentsContainer;
 
 
 displayLastNews = function(n, response){
@@ -78,19 +79,26 @@ xhr.onload = function() {
   displayLastNews(3, articles);
 
   let $expandArticle = $('.article');
+  let $expandLink = $('.article__expand-button');
+  let $showCommentsLink = $('.article__expand-comments-button');
   
-  $expandArticle.click(function(e) {
-
-    let id = this.id;
-    let articleContent = this.children[2];
-    let expandLink = this.children[4];
-    let showCommentsLink = this.children[5];
+  
+  $expandLink.click(function(e) {
+    console.log(this.parentElement)
+    currentArticle = this.parentElement;
+    let id = currentArticle.id;
+    let articleContent = currentArticle.children[2];
+    let expandLink = currentArticle.children[4];
+    let showCommentsLink = currentArticle.children[5];
 
     if (articleContent.textContent.length > 401){
 
       articleContent.textContent = articles[articles.length-id].content.slice(0, 400)+"\u2026";
       expandLink.textContent = 'развернуть';
       showCommentsLink.classList.remove('Article__expand-comments-button--visible');
+      //remove commentsContainer if it expands
+      currentArticle.removeChild(currentArticle.children[currentArticle.children.length-1]); 
+      
     
     }
     else {
@@ -101,10 +109,34 @@ xhr.onload = function() {
       console.log(articleContent.textContent.length);
 
     }
+
+    
+      
+   
   
   });
 
-  
+  $showCommentsLink.click( function(e) {
+    currentArticle = this.parentElement;
+    let id = currentArticle.id;
+    console.log(currentArticle.lastChild.className == 'article__comments-container'  );
+    //did comments already expand?
+    if (currentArticle.lastChild !== undefined) { 
+
+      commentsContainer = document.createElement('div');
+      $(commentsContainer).addClass('article__comments-container');
+
+      comment = document.createElement('div');
+      $(commentsContainer).addClass('article__comment');
+      comment.textContent = articles[articles.length - id].comments[id-1].content;
+      console.log(articles[articles.length - id].comments[0].content);
+
+      currentArticle.append(commentsContainer);
+      commentsContainer.append(comment);
+      
+      
+    }  
+  });
 
   $expandArticle.mouseenter(function(e) {
     
@@ -117,6 +149,7 @@ xhr.onload = function() {
     this.children[4].classList.remove('article__expand-button--hovered');
 
   });
+
 
  
 };    
