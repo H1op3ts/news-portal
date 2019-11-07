@@ -1,9 +1,42 @@
-const xhr = new XMLHttpRequest();
-const $comment = document.querySelector('[name = comment]');
+let xhr = new XMLHttpRequest();
+
 let $body = $('body');
 let $newsContainer = $('.newsContainer');
-let commentsContainer;
+let res;
 
+
+
+createCommentForm = function() { 
+  let commentForm = document.createElement('form');
+  let formInputName = document.createElement('input');
+  let formInputCommentContent = document.createElement('input');
+  let formInputCommentSubmit = document.createElement('input');
+
+  $(commentForm).addClass('article__comment-form');
+  $(formInputName).addClass('article__comment-form-name');
+  $(formInputCommentContent).addClass('article__comment-form-content');
+  $(formInputCommentSubmit).addClass('article__comment-form-submit');
+
+  commentForm.setAttribute('action', ' ');
+  commentForm.name = 'comment';
+  commentForm.method = 'POST';
+  
+  formInputName.name = 'author'
+  formInputName.type = 'text';
+  formInputName.placeholder = 'Представьтесь';
+  
+  formInputCommentContent.name = 'content';
+  formInputCommentContent.type = 'text-area';
+  formInputCommentContent.placeholder = 'Оставьте комментарий';
+  
+  formInputCommentSubmit.type = 'submit';
+  formInputCommentSubmit.value = 'Отправить';
+
+  commentForm.append(formInputName);
+  commentForm.append(formInputCommentContent);
+  commentForm.append(formInputCommentSubmit);
+  commentsWrapper.prepend(commentForm);
+}
 
 displayLastNews = function(n, response){
    
@@ -11,9 +44,7 @@ displayLastNews = function(n, response){
     
     let article = document.createElement('div');
     $(article).addClass('article');
-    $(article).attr('id', n);
-
-
+    
     let createdAt = document.createElement('p');
     $(createdAt).addClass('article__createdAt');
 
@@ -24,8 +55,6 @@ displayLastNews = function(n, response){
     let content = document.createElement('div');
     $(content).addClass('article__content');
     
-    
-
     let title = document.createElement('h3');
     $(title).addClass('article__title');
 
@@ -34,22 +63,17 @@ displayLastNews = function(n, response){
 
     let expandComments = document.createElement('a');
     $(expandComments).addClass('Article__expand-comments-button');
+    expandComments.textContent = `${response[response.length - n].comments.length} комментариев`
     
     let currentArticle = response[response.length-n];
     
     title.textContent = currentArticle.title;
-    category.textContent = currentArticle.category.name;
+    category.textContent = currentArticle.categories.name;
     content.textContent = currentArticle.content.slice(0, 400)+"\u2026";
     //cut unnessesary of date 
-    createdAt.textContent = currentArticle.createdAt.slice(0, 10);    
-    expandContent.textContent = 'развернуть';
-    expandComments.textContent = `показать комментарии (${currentArticle.comments.length})`;
-    console.log(currentArticle.comments.length);
-    
-   
-
-
-
+    createdAt.textContent = 'Дата публикации: ' + currentArticle.createdAt.slice(0, 10);    
+    expandContent.textContent = 'читать';
+      
     //fill the article body
     article.append(title);
     article.append(category);
@@ -58,56 +82,68 @@ displayLastNews = function(n, response){
     article.append(expandContent);
     article.append(expandComments);
     
-  
     $newsContainer.prepend(article);
-    
-      
-    
+       
     n--
   }
-  
-  
-  
+   
 }
+
+let commentsWrapper = document.createElement('div');
+let commentsContainer = document.createElement('div');
+
+$(commentsContainer).addClass('article__comments-container');
+$(commentsWrapper).addClass('article__comments-wrapper--hidden');
+
+
+commentsWrapper.append(commentsContainer);
+
+createCommentForm();
+
+
 
 xhr.open('GET', '/articles');
 xhr.send();
 xhr.responseType = 'json';
 xhr.onload = function() {
+
   articles = xhr.response;
-   
-  displayLastNews(3, articles);
+  
+  displayLastNews(2, articles);
 
   let $expandArticle = $('.article');
   let $expandLink = $('.article__expand-button');
   let $showCommentsLink = $('.article__expand-comments-button');
   
-  
   $expandLink.click(function(e) {
-    console.log(this.parentElement)
-    currentArticle = this.parentElement;
-    let id = currentArticle.id;
-    let articleContent = currentArticle.children[2];
-    let expandLink = currentArticle.children[4];
-    let showCommentsLink = currentArticle.children[5];
-
-    if (articleContent.textContent.length > 401){
-
-      articleContent.textContent = articles[articles.length-id].content.slice(0, 400)+"\u2026";
-      expandLink.textContent = 'развернуть';
-      showCommentsLink.classList.remove('Article__expand-comments-button--visible');
-      //remove commentsContainer if it expands
-      currentArticle.removeChild(currentArticle.children[currentArticle.children.length-1]); 
-      
     
+    currentArticle = this.parentElement;
+
+    let articleData = articles[articles.length - 1 - $(this.parentElement).index()];
+
+    let articleContent = currentArticle.querySelector('.article__content');
+    let expandLink = currentArticle.querySelector('.article__expand-button');
+    let showCommentsLink = currentArticle.querySelector('.article__expand-comments-button');
+
+    $(currentArticle).toggleClass('article--expanded');
+        
+    if ($(currentArticle).hasClass('article--expanded')){
+      
+      articleContent.textContent = articleData.content;
+      expandLink.textContent = 'свернуть';
+      showCommentsLink.textContent = `показать комментарии (${articleData.comments.length})`;
+     
     }
     else {
 
-      articleContent.textContent = articles[articles.length-id].content;
-      expandLink.textContent = 'свернуть';
-      showCommentsLink.classList.add('Article__expand-comments-button--visible');
-      console.log(articleContent.textContent.length);
-
+      articleContent.textContent = articleData.content.slice(0, 400)+"\u2026";
+      expandLink.textContent = 'читать';
+      showCommentsLink.textContent = `${articleData.comments.length} комментариев`;
+            
+      
+      //remove commentsContainer if it exist
+      $(currentArticle).children('.article__comments-container').children().remove(); 
+      $(currentArticle).children('.article__comments-container').remove(); 
     }
 
     
@@ -115,79 +151,166 @@ xhr.onload = function() {
    
   
   });
-
-  $showCommentsLink.click( function(e) {
-    currentArticle = this.parentElement;
-    let id = currentArticle.id;
-    console.log(currentArticle.lastChild.className == 'article__comments-container'  );
-    //did comments already expand?
-    if (currentArticle.lastChild !== undefined) { 
-
-      commentsContainer = document.createElement('div');
-      $(commentsContainer).addClass('article__comments-container');
-
-      comment = document.createElement('div');
-      $(commentsContainer).addClass('article__comment');
-      comment.textContent = articles[articles.length - id].comments[id-1].content;
-      console.log(articles[articles.length - id].comments[0].content);
-
-      currentArticle.append(commentsContainer);
-      commentsContainer.append(comment);
-      
-      
-    }  
-  });
-
-  $expandArticle.mouseenter(function(e) {
-    
-    this.children[4].classList.add('article__expand-button--hovered');
-
-  });
-
-  $expandArticle.mouseleave(function(e) {
-
-    this.children[4].classList.remove('article__expand-button--hovered');
-
-  });
-
-
  
-};    
+  $showCommentsLink.click( function(e) {       
+    
+    let article = articles[articles.length - 1 - $(this.parentElement).index()];
+    
+    
+    //get total number of comments
+    let commentsCount = article.comments.length;
+
+    //get current number of comments
+    let currentCommentsCount = $(commentsContainer).children().length;  
+
+    createComment = function(data, isDataFromSubmit) {
+
+      let comment = document.createElement('div');
+      let commentHeader = document.createElement('div');
+      let commentInner = document.createElement('div');
+      let commentAuthor = document.createElement('p');
+      let commentPublishedAt = document.createElement('p');
+
+      
+      if (isDataFromSubmit == false) {
+
+        commentsContainer.append(comment);
+
+      }
+      else {
+
+        commentsContainer.prepend(comment);
+             
+      }
+
+      $(comment).addClass('article__comment');
+      $(commentHeader).addClass('article__comment-header');
+      $(commentAuthor).addClass('article__comment-author');
+      $(commentInner).addClass('article__comment-content');
+      $(commentPublishedAt).addClass('article__comment-published-at');
+      
+      commentInner.textContent = data.comments[commentsCount-1].content;
+      commentAuthor.textContent = data.comments[commentsCount-1].author;
+      
+      let time = data.comments[commentsCount-1].createdAt;
+      time = time.slice(11,19) + ' ' + time.slice(0, 10);
+      commentPublishedAt.textContent = time;
+
+      commentHeader.append(commentAuthor);
+      commentHeader.append(commentPublishedAt);
+      comment.append(commentHeader);
+      comment.append(commentInner);
 
 
+    }
 
+    if (this.textContent == article.comments.length + " комментариев" ||
+        this.textContent == "показать еще комментарии") {
+      
+      $(commentsWrapper).removeClass('article__comments-wrapper--hidden');
+      
+      commentsCount -= currentCommentsCount;
+          
+      let limit = commentsCount - 9;
+      
 
+      if (limit < 1) {
+        
+        limit = 1;
+        this.textContent = 'свернуть комментарии';
+             
+      }
 
-$comment.addEventListener('submit', function(e) {
-  const xhr = new XMLHttpRequest();
-  e.preventDefault()
-  let formData = new FormData($comment);
-  let object = {};
+      else {
+        
+        this.textContent = "показать еще комментарии"
+        
+      }
+      
+     
 
-  formData.forEach(function(value, key){
-    object[key] = value;
+      while (limit <= commentsCount) {
+
+        createComment(article, false);
+        commentsCount--;
+
+      } 
+
+    }
+ 
+    else {
+      
+      this.textContent  = article.comments.length + " комментариев";
+      $(commentsWrapper).addClass('article__comments-wrapper--hidden');
+
+    }
+    
+    if (currentCommentsCount == 0) {
+      
+      this.parentElement.append(commentsWrapper);
+    
+    }
+  
+    let $comment = document.querySelector('[name = comment]');
+
+    $comment.addEventListener('submit', function(e) {
+      let xhr = new XMLHttpRequest();
+
+      let formData = new FormData($comment);
+
+      let object = {};
+
+    
+
+      formData.forEach(function(value, key){
+        object[key] = value;
+      });
+      
+      e.preventDefault()
+                   
+      if (JSON.stringify(article.comments[article.comments.length-1]) !== JSON.stringify(object) &&
+        object.author !== '' && object.content !== '') {
+        
+        article.comments.push(object);  
+        
+        let update = {comments: article.comments};
+          
+        xhr.open("PUT", '/articles/' + article.id);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(update));
+        xhr.onload = function() {
+
+          res = JSON.parse(xhr.response);
+          
+          let submitCount = 0;
+          
+          commentsCount = article.comments.length - submitCount++;
+
+          createComment(res, true);
+
+          commentsCount--
+
+          $comment.reset();
+          
+        }
+      }
+
+      
+    });  
+    
   });
 
-  let json = JSON.stringify(object);
-  console.log(object);
-  console.log(json);
-  xhr.open("POST", '/comments');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(json);
-  xhr.onload = function() {
-    console.log(xhr.response);
+  //pick out expand/unexpand link
+  $expandArticle.on('mouseenter mouseleave', function (e) {
+    $(this.querySelector('.article__expand-button')).toggleClass('article__expand-button--hovered');
+  });
+ 
+};   
 
-    let lastComment = xhr.response;
-    let comment = document.createElement('div');
-    console.log(lastComment);
-    comment.classList.add('comment');
-    comment.textContent = object.content;
-  
-    $body.append(comment);
-  
-  }
-    
-});   
+
+
+
+
 
 
 

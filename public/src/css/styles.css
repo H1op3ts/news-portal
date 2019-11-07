@@ -40,7 +40,7 @@
 
 .article__content {
     margin-top: 10px;
-    padding: 10px;
+    padding: 50px 10px ;
     position: relative;
 
 }
@@ -69,7 +69,7 @@
     font-size: 0.8em;;
     right: 30px;
     bottom: 20px;
-    text-decoration: underline;
+    text-decoration: none;
     color: rgb(199, 199, 199);
     z-index: 1;
 }
@@ -78,26 +78,62 @@
     cursor: pointer;
     text-decoration: none;
     color: black;
+    
 }
+
 
 .article__expand-comments-button {
-    display: none;
-}
-
-.article__expand-comments-button--visible {
-    display: block;
+    
     position: absolute;
     font-size: 0.8em;;
     right: 100px;
     bottom: 20px;
-    text-decoration: underline;
+    text-decoration: none;
     color: rgb(199, 199, 199);
     z-index: 1;
 
 }
 
-.article__expand-comments-button--visible:hover {
+.article__expand-comments-button:hover {
     cursor: pointer;
     text-decoration: none;
     color: black;
+}
+
+.article__comment {
+    padding: 20px;
+    
+}
+
+.article__comment-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(227, 242, 251);
+}
+
+.article__comment-published-at {
+    padding-right: 25px;
+    right: 0;
+}
+
+.article__comment-published-at:before {
+    content: 'Опубликовано: ';
+    color: rgb(199, 199, 199);
+}
+
+.article__comment-author{
+    padding-left: 25px;
+}
+
+.article__comment-author::before {
+    content: 'Автор: ';
+    color: rgb(199, 199, 199);
+}
+
+.article__comment-content {
+    padding: 25px;
+}
+
+.article__comments-wrapper--hidden {
+    display: none;
 }

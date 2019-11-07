@@ -23,11 +23,13 @@
       "via": "related",
       "plugin": "upload"
     },
-    "category": {
+    "categories": {
       "model": "categories"
     },
     "comments": {
-      "collection": "comments"
+      "group": "comments",
+      "type": "group",
+      "repeatable": true
     }
   }
 }

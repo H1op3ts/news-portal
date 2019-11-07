@@ -1,18 +1,12 @@
 {
-  "connection": "default",
-  "collectionName": "comments",
   "info": {
     "name": "comments",
     "description": ""
   },
-  "options": {
-    "timestamps": [
-      "createdAt",
-      "updatedAt"
-    ]
-  },
+  "connection": "default",
+  "collectionName": "groups_comments",
   "attributes": {
-    "name": {
+    "author": {
       "type": "string"
     },
     "content": {
