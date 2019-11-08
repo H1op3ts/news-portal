@@ -6,11 +6,21 @@ let res;
 
 
 
-createCommentForm = function() { 
+createCommentForm = function(element, data) { 
+
+  let commentsWrapper = document.createElement('div');
+  let commentsContainer = document.createElement('div');
+
+  $(commentsContainer).addClass('article__comments-container');
+  $(commentsWrapper).addClass('article__comments-wrapper--hidden');
+
+
+  commentsWrapper.append(commentsContainer);
+
   let commentForm = document.createElement('form');
   let formInputName = document.createElement('input');
   let formInputCommentContent = document.createElement('input');
-  let formInputCommentSubmit = document.createElement('input');
+  let formInputCommentSubmit = document.createElement('button');
 
   $(commentForm).addClass('article__comment-form');
   $(formInputName).addClass('article__comment-form-name');
@@ -18,7 +28,7 @@ createCommentForm = function() {
   $(formInputCommentSubmit).addClass('article__comment-form-submit');
 
   commentForm.setAttribute('action', ' ');
-  commentForm.name = 'comment';
+  commentForm.id = data.id;
   commentForm.method = 'POST';
   
   formInputName.name = 'author'
@@ -26,16 +36,58 @@ createCommentForm = function() {
   formInputName.placeholder = 'Представьтесь';
   
   formInputCommentContent.name = 'content';
-  formInputCommentContent.type = 'text-area';
+  formInputCommentContent.type = 'text';
   formInputCommentContent.placeholder = 'Оставьте комментарий';
   
-  formInputCommentSubmit.type = 'submit';
-  formInputCommentSubmit.value = 'Отправить';
+  //formInputCommentSubmit.type = 'submit';
+  formInputCommentSubmit.textContent = 'Отправить';
 
   commentForm.append(formInputName);
   commentForm.append(formInputCommentContent);
   commentForm.append(formInputCommentSubmit);
   commentsWrapper.prepend(commentForm);
+
+  element.parentElement.append(commentsWrapper);
+
+  commentForm.addEventListener('submit', function(e) {
+
+    let id = commentForm.id;
+                
+    let xhr = new XMLHttpRequest();
+
+    let formData = new FormData(commentForm);
+
+    let object = {};
+
+    e.preventDefault()
+
+    formData.forEach(function(value, key){
+      object[key] = value;
+    });
+    
+    if (object.author !== '' && object.content !== '') {
+      
+      data.comments.push(object);  
+      
+      let update = {comments: data.comments};
+        
+      xhr.open("PUT", '/articles/' + id);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify(update));
+      xhr.onload = function() {
+
+        res = JSON.parse(xhr.response);
+
+        createComment(res, true, commentsContainer);
+
+        commentForm.reset();
+      
+      }
+      
+    }
+  
+  })   
+
 }
 
 displayLastNews = function(n, response){
@@ -62,7 +114,7 @@ displayLastNews = function(n, response){
     $(expandContent).addClass('article__expand-button');
 
     let expandComments = document.createElement('a');
-    $(expandComments).addClass('Article__expand-comments-button');
+    $(expandComments).addClass('article__expand-comments-button');
     expandComments.textContent = `${response[response.length - n].comments.length} комментариев`
     
     let currentArticle = response[response.length-n];
@@ -88,19 +140,6 @@ displayLastNews = function(n, response){
   }
    
 }
-
-let commentsWrapper = document.createElement('div');
-let commentsContainer = document.createElement('div');
-
-$(commentsContainer).addClass('article__comments-container');
-$(commentsWrapper).addClass('article__comments-wrapper--hidden');
-
-
-commentsWrapper.append(commentsContainer);
-
-createCommentForm();
-
-
 
 xhr.open('GET', '/articles');
 xhr.send();
@@ -152,18 +191,27 @@ xhr.onload = function() {
   
   });
  
-  $showCommentsLink.click( function(e) {       
+  $showCommentsLink.click( function(e) {  
     
     let article = articles[articles.length - 1 - $(this.parentElement).index()];
-    
-    
+
+    if ($(this.parentElement.lastElementChild).hasClass('article__expand-comments-button')) {
+      
+      createCommentForm(this, article);
+            
+    }
+        
     //get total number of comments
     let commentsCount = article.comments.length;
 
+    let commentsWrapper = this.parentElement.lastElementChild;
+
+    let commentsContainer = commentsWrapper.lastElementChild;
+
     //get current number of comments
     let currentCommentsCount = $(commentsContainer).children().length;  
-
-    createComment = function(data, isDataFromSubmit) {
+    
+    createComment = function(data, isDataFromSubmit, container) {
 
       let comment = document.createElement('div');
       let commentHeader = document.createElement('div');
@@ -174,12 +222,13 @@ xhr.onload = function() {
       
       if (isDataFromSubmit == false) {
 
-        commentsContainer.append(comment);
+        container.append(comment);
 
       }
       else {
-
-        commentsContainer.prepend(comment);
+        
+        commentsCount = data.comments.length;
+        container.prepend(comment);
              
       }
 
@@ -204,6 +253,8 @@ xhr.onload = function() {
 
     }
 
+    
+
     if (this.textContent == article.comments.length + " комментариев" ||
         this.textContent == "показать еще комментарии") {
       
@@ -226,12 +277,10 @@ xhr.onload = function() {
         this.textContent = "показать еще комментарии"
         
       }
-      
-     
 
       while (limit <= commentsCount) {
 
-        createComment(article, false);
+        createComment(article, false,commentsContainer);
         commentsCount--;
 
       } 
@@ -242,63 +291,11 @@ xhr.onload = function() {
       
       this.textContent  = article.comments.length + " комментариев";
       $(commentsWrapper).addClass('article__comments-wrapper--hidden');
-
+      
     }
     
-    if (currentCommentsCount == 0) {
-      
-      this.parentElement.append(commentsWrapper);
     
-    }
-  
-    let $comment = document.querySelector('[name = comment]');
-
-    $comment.addEventListener('submit', function(e) {
-      let xhr = new XMLHttpRequest();
-
-      let formData = new FormData($comment);
-
-      let object = {};
-
-    
-
-      formData.forEach(function(value, key){
-        object[key] = value;
-      });
-      
-      e.preventDefault()
-                   
-      if (JSON.stringify(article.comments[article.comments.length-1]) !== JSON.stringify(object) &&
-        object.author !== '' && object.content !== '') {
-        
-        article.comments.push(object);  
-        
-        let update = {comments: article.comments};
-          
-        xhr.open("PUT", '/articles/' + article.id);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(update));
-        xhr.onload = function() {
-
-          res = JSON.parse(xhr.response);
-          
-          let submitCount = 0;
-          
-          commentsCount = article.comments.length - submitCount++;
-
-          createComment(res, true);
-
-          commentsCount--
-
-          $comment.reset();
-          
-        }
-      }
-
-      
-    });  
-    
-  });
+  })
 
   //pick out expand/unexpand link
   $expandArticle.on('mouseenter mouseleave', function (e) {
@@ -315,61 +312,3 @@ xhr.onload = function() {
 
 
 
-/* const xhr = new XMLHttpRequest();
-const $comment = document.querySelector('[name = comment]');
-const $submit = $('.submit');
-let $body = $('body');
-let comment = document.createElement('div');
- 
-xhr.open('GET', '/comments');
-xhr.send();
-xhr.responseType = 'json';
-xhr.onload = function() {
-  
-  let comments = xhr.response
-    
-  if (comments[0] === undefined) {
-    comment.classList.add('noComments');
-    comment.textContent = "Оставьте первый комментарий"
-  }
-  else {
-    console.log(comments);
-    comment.classList.add('comment');
-    comment.textContent = comments[comments.length-1].content;
-  }
-
-  $body.append(comment);
-    
-};    
-    
-$comment.addEventListener('submit', function(e) {
-  const xhr = new XMLHttpRequest();
-  e.preventDefault()
-  let formData = new FormData($comment);
-  let object = {};
-
-  formData.forEach(function(value, key){
-    object[key] = value;
-  });
-
-  let json = JSON.stringify(object);
-  console.log(object);
-  console.log(json);
-  xhr.open("POST", '/comments');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(json);
-  xhr.onload = function() {
-    console.log(xhr.response);
-
-    let lastComment = xhr.response;
-    let comment = document.createElement('div');
-    console.log(lastComment);
-    comment.classList.add('comment');
-    comment.textContent = object.content;
-  
-    $body.append(comment);
-  
-  }
-    
-});  
- */
