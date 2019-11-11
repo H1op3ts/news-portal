@@ -1,3 +1,7 @@
+body {
+    min-width: 1080px;
+}
+
 .header {
 
     background-color: #ffdead;
@@ -27,10 +31,6 @@
     
 }
 
-/* .article:hover {
-    cursor:pointer;
-} */
-
 .article__title {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     margin-bottom: 0;
@@ -38,11 +38,19 @@
     padding-top: 10px;;
 }
 
+.article__content-wrapper {
+    display: flex;
+}
+
+.article__image {
+    height: 100px;
+    padding: 10px;
+}
+
 .article__content {
     margin-top: 10px;
-    padding: 50px 10px ;
+    padding: 0 10px ;
     position: relative;
-
 }
 
 .article__category {
@@ -64,27 +72,27 @@
     margin: 10px;
 }
 
-.article__expand-button {
-    position: absolute;
+.article__expand-content-button {
+    padding: 10px 0;
     font-size: 0.8em;;
-    right: 30px;
-    bottom: 20px;
+    width: 100px;
     text-decoration: none;
     color: rgb(199, 199, 199);
-    z-index: 1;
+    display: block;
 }
 
-.article__expand-button--hovered {
+.article__expand-content-button--hovered {
     cursor: pointer;
     text-decoration: none;
-    color: black;
+    color: rgb(255, 0, 0);
     
 }
 
 
 .article__expand-comments-button {
     
-    position: absolute;
+    
+    margin-left: calc(100% - 150px);
     font-size: 0.8em;;
     right: 100px;
     bottom: 20px;
@@ -98,6 +106,10 @@
     cursor: pointer;
     text-decoration: none;
     color: black;
+}
+
+.article__comments-wrapper {
+    padding-top: 40px;
 }
 
 .article__comment {
@@ -128,10 +140,30 @@
 .article__comment-author::before {
     content: 'Автор: ';
     color: rgb(199, 199, 199);
+    
 }
 
 .article__comment-content {
     padding: 25px;
+}
+
+.article__comment-content--hidden {
+    display: none;
+}
+
+.article__comment-delete-link, .article__comment-edit-link {
+    visibility: hidden;
+    margin-left: 25px;
+    color: rgb(199, 199, 199);
+}
+
+.article__comment-delete-link:hover, .article__comment-edit-link:hover {
+    color: rgb(255, 0, 0);
+    cursor: pointer;
+}
+
+.article__comment-delete-link--visible, .article__comment-edit-link--visible {
+    visibility: visible;
 }
 
 .article__comments-wrapper--hidden {
@@ -144,7 +176,8 @@
 }
 
 .article__comment-form-name {
-    margin-top: 35px;;
+    padding: 5px;
+    margin-top: 35px;
     height: 30px;
 }
 
@@ -155,6 +188,7 @@
 }
 
 .article__comment-form-content {
+    padding: 5px;
     height: 200px;
     width: 100%;
     margin-top: 20px;
@@ -162,7 +196,7 @@
 
 .article__comment-form-submit {
     margin-top: 20px;
-    width: 100px;
+    padding: 0 10px;
     height: 40px;
     color: white;
     background-color: rgb(19, 105, 243);
@@ -170,6 +204,27 @@
 }
 
 .article__comment-form-submit:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+
+
+.article__edit-comment-form-input {
+    width: 100%;
+    height: 80px;
+}
+
+.article__edit-comment-form-submit, .article__edit-comment-form-cancel {
+    margin: 20px 10px 0 0 ;
+    padding: 0 10px;
+    height: 40px;
+    color: white;
+    background-color: rgb(19, 105, 243);
+    border: none;
+}
+
+.article__edit-comment-form-submit:hover, .article__edit-comment-form-cancel:hover {
     cursor: pointer;
     opacity: 0.7;
 }
